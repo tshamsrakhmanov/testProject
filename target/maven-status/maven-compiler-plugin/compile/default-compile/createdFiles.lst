@@ -1,3 +1,4 @@
 org/example/Main.class
 org/example/Service/Notification.class
 org/example/KafkaConsumerConfig/KafkaProducerConfig.class
+org/example/KafkaConsumerConfig/KafkaStartupVerifier.class
