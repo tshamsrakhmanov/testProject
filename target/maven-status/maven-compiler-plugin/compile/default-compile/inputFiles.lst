@@ -1,4 +1,6 @@
 /home/batya/testProject/src/main/java/org/example/Main.java
+/home/batya/testProject/src/main/java/org/example/DTO/OutputDTO.java
 /home/batya/testProject/src/main/java/org/example/KafkaConsumerConfig/KafkaProducerConfig.java
 /home/batya/testProject/src/main/java/org/example/Service/Notification.java
+/home/batya/testProject/src/main/java/org/example/Controller/RestConrtoller.java
 /home/batya/testProject/src/main/java/org/example/KafkaConsumerConfig/KafkaStartupVerifier.java
