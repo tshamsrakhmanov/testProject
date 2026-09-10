@@ -52,11 +52,12 @@ public class RestConrtoller {
   public CommonMessageDTO businessLogicV2(@RequestBody RestMessageDTO requestDTO,
       HttpServletRequest httpServletRequest) {
 
-    kafkaSender.sendMessage(
+    kafkaSender.sendMessageAsync(
         requestDTO.getMessageBody(),
         requestDTO.getMessageKey(),
         requestDTO.getMessageHeaders(),
-        TOPIC);
+        TOPIC,
+        3000L);
 
     return new CommonMessageDTO("Success!");
 
