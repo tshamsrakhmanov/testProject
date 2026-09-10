@@ -3,6 +3,8 @@ package org.example.KafkaProducerConfig;
 import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.slf4j.MDC;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +18,35 @@ public class KafkaSender {
 
   private final KafkaTemplate<String, String> kafkaTemplate;
 
-  public void sendMessage(String messageBody, String messageKey, Map<String, String> messageHeaders, String TOPIC,
-      String traceId) {
-    try {
-      kafkaTemplate.send(messageBuilder(messageBody, messageKey, messageHeaders, TOPIC));
-      log.info("{} | Message sent successfully", traceId);
-    } catch (Exception e) {
-      log.error("{} | Failed to send message", traceId);
-      throw new RuntimeException("Failed to send Kafka message", e);
-    }
+  public void sendMessage(String messageBody, String messageKey, Map<String, String> messageHeaders, String TOPIC) {
+
+    Map<String, String> mdcContext = MDC.getCopyOfContextMap();
+
+    kafkaTemplate.send(messageBuilder(messageBody, messageKey, messageHeaders, TOPIC))
+        .whenComplete((result, ex) -> {
+          if (mdcContext != null) {
+            MDC.setContextMap(mdcContext);
+          }
+          // if (ex != null) {
+          // log.error("Failed to send message to topic={}", TOPIC, ex);
+          // return;
+          // }
+          // RecordMetadata md = result.getRecordMetadata();
+          // log.info("Message send: topic:{} partition:{} offset:{} timestamp:{}",
+          // md.topic(), md.partition(), md.offset(), md.timestamp());
+          try {
+            if (ex != null) {
+              log.error("Failed to send message to topic={}", TOPIC, ex);
+              return;
+            }
+            RecordMetadata md = result.getRecordMetadata();
+            log.info("Message send: topic:{} partition:{} offset:{} timestamp:{}",
+                md.topic(), md.partition(), md.offset(), md.timestamp());
+          } finally {
+            // 3. Clean up so we don't leak state into a reused Kafka thread
+            MDC.clear();
+          }
+        });
   }
 
   private ProducerRecord<String, String> messageBuilder(

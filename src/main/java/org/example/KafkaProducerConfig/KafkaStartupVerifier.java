@@ -2,6 +2,7 @@ package org.example.KafkaProducerConfig;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.kafka.clients.admin.AdminClient;
@@ -31,7 +32,8 @@ public class KafkaStartupVerifier {
 
   @EventListener(ApplicationReadyEvent.class)
   public void verifyKafkaConnection() {
-    log.info("Checking Kafka connection to: {}", bootstrapServers);
+    String traceId = UUID.randomUUID().toString().replace("-", "");
+    log.info("{} | Checking Kafka connection to: {}", traceId, bootstrapServers);
 
     Map<String, Object> config = new HashMap<>();
     config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -44,9 +46,9 @@ public class KafkaStartupVerifier {
           .clusterId()
           .get(2, TimeUnit.SECONDS);
 
-      log.info("✅ Kafka connection successful");
+      log.info("{} | Kafka connection successful", traceId);
     } catch (Exception e) {
-      log.error("❌ Kafka connection failed: {}", e.getMessage());
+      log.error("{} | Kafka connection failed: {}", traceId, e.getMessage());
       SpringApplication.exit(context, () -> 1);
       System.exit(1);
     }
