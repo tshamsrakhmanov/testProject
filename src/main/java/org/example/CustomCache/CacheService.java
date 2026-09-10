@@ -1,5 +1,8 @@
 package org.example.CustomCache;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,6 +21,17 @@ public class CacheService {
 
   public String get(String id) {
     return cache.get(id);
+  }
+
+  public Map<String, String> getAll() {
+    Map<String, String> result = new HashMap<String, String>();
+    for (Entry<String, String> entry : cache.entrySet()) {
+      String key = entry.getKey();
+      String value = entry.getValue();
+      result.put(key, value);
+
+    }
+    return result;
   }
 
 }

@@ -5,6 +5,7 @@ import org.example.DTO.CommonMessageDTO;
 import org.example.DTO.OutputDTO;
 import org.example.DTO.PutCacheDTO;
 import org.example.DTO.RestMessageDTO;
+import org.example.DTO.TotalCacheDTO;
 import org.example.KafkaProducerConfig.KafkaSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,5 +84,12 @@ public class RestConrtoller {
       throw new Exception("Not found in cache");
     }
 
+  }
+
+  @GetMapping(path = "/all_cache")
+  public TotalCacheDTO getAllCache() {
+    TotalCacheDTO result = new TotalCacheDTO();
+    result.setValues(cacheService.getAll());
+    return result;
   }
 }

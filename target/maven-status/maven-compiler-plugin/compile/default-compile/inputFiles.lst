@@ -3,6 +3,7 @@
 /home/batya/testProject/src/main/java/org/example/Service/Notification.java
 /home/batya/testProject/src/main/java/org/example/CustomCache/CacheService.java
 /home/batya/testProject/src/main/java/org/example/Main.java
+/home/batya/testProject/src/main/java/org/example/DTO/TotalCacheDTO.java
 /home/batya/testProject/src/main/java/org/example/KafkaProducerConfig/KafkaProducerConfig.java
 /home/batya/testProject/src/main/java/org/example/DTO/OutputDTO.java
 /home/batya/testProject/src/main/java/org/example/KafkaProducerConfig/KafkaStartupVerifier.java
