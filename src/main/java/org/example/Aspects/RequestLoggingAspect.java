@@ -41,18 +41,17 @@ public class RequestLoggingAspect {
     if (attrs != null) {
       HttpServletRequest req = attrs.getRequest();
 
-      log.info("---");
-      log.info("HTTP request");
-      log.info("Method:{}, Path: {}", req.getMethod(), req.getRequestURI());
+      log.info("┌───");
+      log.info("│HTTP request");
+      log.info("│Method:{}, Path: {}", req.getMethod(), req.getRequestURI());
 
       for (Object arg : pjp.getArgs()) {
         if (arg != null
             && !(arg instanceof HttpServletRequest)
             && !(arg instanceof HttpServletResponse)) {
-          log.info("Request mapped: {}", formatForLog(arg));
+          log.info("│Request mapped: {}", formatForLog(arg));
         }
       }
-      log.info("---");
     }
 
     Object result;
@@ -60,10 +59,10 @@ public class RequestLoggingAspect {
       result = pjp.proceed();
     } catch (Throwable t) {
       if (attrs != null) {
-        log.info("---");
-        log.info("HTTP response (exception)");
-        log.info("Exception: {}", t.getMessage());
-        log.info("---");
+        log.info("│---");
+        log.info("│HTTP response (exception)");
+        log.info("│Exception: {}", t.getMessage());
+        log.info("└───");
       }
       throw t;
     }
@@ -71,13 +70,13 @@ public class RequestLoggingAspect {
     if (attrs != null) {
       HttpServletResponse res = attrs.getResponse();
 
-      log.info("---");
-      log.info("HTTP response");
+      log.info("│---");
+      log.info("│HTTP response");
       if (res != null) {
-        log.info("Status: {}", res.getStatus());
+        log.info("│Status: {}", res.getStatus());
       }
-      log.info("Response: {}", formatForLog(result));
-      log.info("---");
+      log.info("│Response: {}", formatForLog(result));
+      log.info("└───");
     }
 
     return result;
@@ -96,7 +95,7 @@ public class RequestLoggingAspect {
         || value instanceof ByteBuffer
         || value instanceof Resource
         || value instanceof MultipartFile) {
-      log.warn("Skipping log for type [{}] - not safe to stringify", value.getClass().getName());
+      log.warn("│Skipping log for type [{}] - not safe to stringify", value.getClass().getName());
       return "<" + value.getClass().getSimpleName() + " - skipped>";
     }
 

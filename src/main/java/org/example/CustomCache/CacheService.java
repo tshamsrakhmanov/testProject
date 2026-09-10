@@ -3,9 +3,9 @@ package org.example.CustomCache;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +14,8 @@ public class CacheService {
   private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 
   public String put(String value) {
-    String id = UUID.randomUUID().toString();
+    // String id = UUID.randomUUID().toString();
+    String id = MDC.get("traceId");
     cache.put(id, value);
     return id;
   }
