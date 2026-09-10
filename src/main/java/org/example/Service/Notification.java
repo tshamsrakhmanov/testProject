@@ -12,7 +12,7 @@ public class Notification {
   @EventListener(ApplicationReadyEvent.class)
   public void notification() {
     log.info("---");
-    log.info("SOME NEW LINE");
+    log.info("Welcome to app");
     log.info("---");
   }
 }

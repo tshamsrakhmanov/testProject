@@ -14,7 +14,6 @@ public class CacheService {
   private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 
   public String put(String value) {
-    // String id = UUID.randomUUID().toString();
     String id = MDC.get("traceId");
     cache.put(id, value);
     return id;
