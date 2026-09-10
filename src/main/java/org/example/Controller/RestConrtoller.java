@@ -10,6 +10,7 @@ import org.example.KafkaProducerConfig.KafkaSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ public class RestConrtoller {
 
   private final CacheService cacheService;
 
+  @Tag(name = "Test group", description = "Single handler to test")
   @GetMapping(path = "/test")
   public OutputDTO someMethod() {
 
@@ -39,6 +41,7 @@ public class RestConrtoller {
     return outputDTO;
   }
 
+  @Tag(name = "Kafka group", description = "handlers responsible for actions with Kafka")
   @PostMapping(path = "/business_logic_v1")
   public CommonMessageDTO businessLogicV1(@RequestBody RestMessageDTO requestDTO) {
 
@@ -52,6 +55,7 @@ public class RestConrtoller {
 
   }
 
+  @Tag(name = "Kafka group", description = "handlers responsible for actions with Kafka")
   @PostMapping(path = "/business_logic_v2")
   public CommonMessageDTO businessLogicV2(@RequestBody RestMessageDTO requestDTO) {
 
@@ -66,6 +70,7 @@ public class RestConrtoller {
 
   }
 
+  @Tag(name = "Cache group", description = "Group to work with ConcurrentHashMap")
   @PutMapping(path = "/cache")
   public CommonMessageDTO putInCache(@RequestBody PutCacheDTO requestDTO) {
 
@@ -73,6 +78,7 @@ public class RestConrtoller {
 
   }
 
+  @Tag(name = "Cache group", description = "Group to work with ConcurrentHashMap")
   @GetMapping(path = "/cache")
   public CommonMessageDTO getInCache(@RequestBody PutCacheDTO requestDTO) throws Exception {
 
@@ -86,6 +92,7 @@ public class RestConrtoller {
 
   }
 
+  @Tag(name = "Cache group", description = "Group to work with ConcurrentHashMap")
   @GetMapping(path = "/all_cache")
   public TotalCacheDTO getAllCache() {
     TotalCacheDTO result = new TotalCacheDTO();
