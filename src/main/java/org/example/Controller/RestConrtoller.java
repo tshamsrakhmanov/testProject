@@ -10,6 +10,8 @@ import org.example.KafkaProducerConfig.KafkaSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,6 +74,7 @@ public class RestConrtoller {
 
   @Tag(name = "Cache group", description = "Group to work with ConcurrentHashMap")
   @PutMapping(path = "/cache")
+  @Operation(summary = "Store value", description = "Put string in cache, with return of entry's UUID - to fetch later")
   public CommonMessageDTO putInCache(@RequestBody PutCacheDTO requestDTO) {
 
     return new CommonMessageDTO(cacheService.put(requestDTO.getValue()));
@@ -80,6 +83,7 @@ public class RestConrtoller {
 
   @Tag(name = "Cache group", description = "Group to work with ConcurrentHashMap")
   @GetMapping(path = "/cache")
+  @Operation(summary = "Return single entry from cache", description = "Return single entry by given UUID")
   public CommonMessageDTO getInCache(@RequestBody PutCacheDTO requestDTO) throws Exception {
 
     String result = cacheService.get(requestDTO.getValue());
@@ -93,6 +97,7 @@ public class RestConrtoller {
   }
 
   @Tag(name = "Cache group", description = "Group to work with ConcurrentHashMap")
+  @Operation(summary = "Get all value in cache", description = "Retrieves full list of all entries in cache")
   @GetMapping(path = "/all_cache")
   public TotalCacheDTO getAllCache() {
     TotalCacheDTO result = new TotalCacheDTO();
