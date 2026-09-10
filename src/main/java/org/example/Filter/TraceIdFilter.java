@@ -1,4 +1,4 @@
-package org.example.Filter; // <- change to your package
+package org.example.Filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,15 +24,13 @@ public class TraceIdFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request,
       HttpServletResponse response,
       FilterChain chain) throws ServletException, IOException {
-    // Reuse incoming trace id if present (useful for distributed tracing),
-    // otherwise generate a new one
+
     String traceId = request.getHeader(TRACE_ID_HEADER);
     if (traceId == null || traceId.isBlank()) {
       traceId = UUID.randomUUID().toString().replace("-", "");
     }
 
     MDC.put(TRACE_ID, traceId);
-    System.out.println(">>> Filter ran, MDC=" + MDC.get(TRACE_ID)); // temp debug
     response.setHeader(TRACE_ID_HEADER, traceId);
 
     try {

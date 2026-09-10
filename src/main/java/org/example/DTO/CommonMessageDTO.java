@@ -8,6 +8,5 @@ import lombok.Data;
 public class CommonMessageDTO {
 
   private String result;
-  private String traceId;
 
 }

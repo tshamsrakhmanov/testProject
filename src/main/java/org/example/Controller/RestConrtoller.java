@@ -1,7 +1,5 @@
 package org.example.Controller;
 
-import java.util.UUID;
-
 import org.example.DTO.CommonMessageDTO;
 import org.example.DTO.OutputDTO;
 import org.example.DTO.RestMessageDTO;
@@ -29,8 +27,6 @@ public class RestConrtoller {
   @GetMapping(path = "/test")
   public OutputDTO someMethod(HttpServletRequest httpServletRequest) {
 
-    log.info("Test handler invoked, {}", httpServletRequest.getMethod());
-
     OutputDTO outputDTO = new OutputDTO();
     outputDTO.setValue("some value");
     outputDTO.setCount(15);
@@ -39,16 +35,8 @@ public class RestConrtoller {
   }
 
   @PostMapping(path = "/business_logic_v1")
-  public CommonMessageDTO sendKafkaMessageSync(@RequestBody RestMessageDTO requestDTO,
+  public CommonMessageDTO businessLogicV1(@RequestBody RestMessageDTO requestDTO,
       HttpServletRequest httpServletRequest) {
-
-    String traceId_string = UUID.randomUUID().toString().replace("-", "");
-
-    log.info("HTTP request");
-    log.info("method:{}, path: {}",
-        httpServletRequest.getMethod(),
-        httpServletRequest.getRequestURI());
-    log.info("Request mapped: {}", requestDTO);
 
     kafkaSender.sendMessage(
         requestDTO.getMessageBody(),
@@ -56,8 +44,21 @@ public class RestConrtoller {
         requestDTO.getMessageHeaders(),
         TOPIC);
 
-    return new CommonMessageDTO("Success!", traceId_string);
+    return new CommonMessageDTO("Success!");
 
   }
 
+  @PostMapping(path = "/business_logic_v2")
+  public CommonMessageDTO businessLogicV2(@RequestBody RestMessageDTO requestDTO,
+      HttpServletRequest httpServletRequest) {
+
+    kafkaSender.sendMessage(
+        requestDTO.getMessageBody(),
+        requestDTO.getMessageKey(),
+        requestDTO.getMessageHeaders(),
+        TOPIC);
+
+    return new CommonMessageDTO("Success!");
+
+  }
 }

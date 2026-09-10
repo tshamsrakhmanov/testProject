@@ -54,6 +54,10 @@
             <artifactId>json-path</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
 <!--        h2 in memory db-->
         <!-- <dependency> -->
         <!--     <groupId>com.h2database</groupId> -->
