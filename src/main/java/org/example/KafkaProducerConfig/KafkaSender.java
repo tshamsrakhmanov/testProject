@@ -79,7 +79,6 @@ public class KafkaSender {
 
   private ProducerRecord<String, String> messageBuilder(
       String messageBody, String messageKey, Map<String, String> messageHeaders, String TOPIC) {
-
     ProducerRecord<String, String> record = new ProducerRecord<String, String>(TOPIC, messageKey, messageBody);
 
     if (messageHeaders == null || messageHeaders.isEmpty()) {
