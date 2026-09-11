@@ -8,7 +8,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CacheService {
 
   private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
@@ -20,7 +23,18 @@ public class CacheService {
   }
 
   public String get(String id) {
-    return cache.get(id);
+    try {
+      String result = cache.get(id);
+      cache.remove(id);
+      return result;
+    } catch (Exception e) {
+      log.error("Not found in cache");
+      return null;
+    }
+  }
+
+  public void clear() {
+    cache.clear();
   }
 
   public Map<String, String> getAll() {
