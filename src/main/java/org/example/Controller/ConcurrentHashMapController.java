@@ -30,7 +30,7 @@ public class ConcurrentHashMapController {
   @PutMapping(path = "/cache")
   public CommonMessageDTO putInCache(@RequestBody PutCacheDTO requestDTO) {
 
-    log.info("Mapped body: {}", requestDTO);
+    log.info("Mapped requset: {}", requestDTO);
     return new CommonMessageDTO(cacheService.put(requestDTO.getValue()));
 
   }
@@ -39,11 +39,11 @@ public class ConcurrentHashMapController {
   @GetMapping(path = "/cache")
   public ResponseEntity<?> getInCache(@RequestBody PutCacheDTO requestDTO) throws JsonProcessingException {
 
-    log.info("Mapped body: {}", requestDTO);
+    log.info("Mapped request: {}", requestDTO);
     String result = cacheService.get(requestDTO.getValue());
 
     if (result != null) {
-      log.info("Mapped body: {}", result);
+      log.info("Mapped response: {}", result);
       return ResponseEntity.status(HttpStatus.OK).body(result);
     } else {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -56,7 +56,7 @@ public class ConcurrentHashMapController {
   public TotalCacheDTO getAllCache() {
     TotalCacheDTO result = new TotalCacheDTO();
     result.setValues(cacheService.getAll());
-    log.info("Mapped body: {}", result);
+    log.info("Mapped response: {}", result);
     return result;
   }
 
