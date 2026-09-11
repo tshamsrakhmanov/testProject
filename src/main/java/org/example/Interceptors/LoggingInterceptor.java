@@ -15,11 +15,9 @@ public class LoggingInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) {
     // 1. INCOMING
-    log.info("┌───");
-    log.info("│ INCOMING");
+    log.info("│ HTTP IN");
     log.info("│ Method: {}", req.getMethod());
     log.info("│ Path: {}", req.getRequestURI());
-    log.info("│ Query: {}", req.getQueryString());
     return true;
   }
 
@@ -27,11 +25,10 @@ public class LoggingInterceptor implements HandlerInterceptor {
   public void afterCompletion(HttpServletRequest req, HttpServletResponse res,
       Object handler, Exception ex) {
     // 2. OUTGOING — runs AFTER Spring sets the final status
-    log.info("│ OUTGOING");
+    log.info("│ HTTP OUT");
     log.info("│ Status: {}", res.getStatus());
     if (ex != null) {
       log.info("│ Exception: {}", ex.getMessage());
     }
-    log.info("└───");
   }
 }
