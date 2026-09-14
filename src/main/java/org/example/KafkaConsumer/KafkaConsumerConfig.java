@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.Interceptors.KafkaMdcRecordInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,8 @@ public class KafkaConsumerConfig {
   @Value("${custom.kafka_brokers}")
   private String bootstrapServers;
 
+  private final KafkaMdcRecordInterceptor kafkaMdcRecordInterceptor; // <-- inject
+
   @Bean
   public ConsumerFactory<String, String> consumerFactory() {
 
@@ -40,6 +43,7 @@ public class KafkaConsumerConfig {
     factory.setConsumerFactory(consumerFactory());
     factory.setConcurrency(3);
     factory.getContainerProperties().setPollTimeout(500);
+    factory.setRecordInterceptor(kafkaMdcRecordInterceptor); // <-- register
     return factory;
   }
 

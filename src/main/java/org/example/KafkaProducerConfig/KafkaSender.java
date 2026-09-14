@@ -37,7 +37,7 @@ public class KafkaSender {
       }
       try {
         if (delayMillis > 0) {
-          log.warn("Delay to be applied: {}", delayMillis);
+          log.warn("Delay for kafka producer: {} ms", delayMillis);
           Thread.sleep(delayMillis);
         }
         // Call the existing sync-ish method (which itself uses whenComplete)
@@ -55,7 +55,9 @@ public class KafkaSender {
 
     Map<String, String> mdcContext = MDC.getCopyOfContextMap();
 
-    kafkaTemplate.send(messageBuilder(messageBody, messageKey, messageHeaders, TOPIC))
+    ProducerRecord<String, String> message = messageBuilder(messageBody, messageKey, messageHeaders, TOPIC);
+
+    kafkaTemplate.send(message)
         .whenComplete((result, ex) -> {
 
           if (mdcContext != null) {
@@ -68,8 +70,12 @@ public class KafkaSender {
               return;
             }
             RecordMetadata md = result.getRecordMetadata();
-            log.info("Message send: topic:{} partition:{} offset:{} timestamp:{}",
+            log.info("Kafka message SEND");
+            log.info("Topic: {}, partition: {}, offset: {}, timestamp: {}",
                 md.topic(), md.partition(), md.offset(), md.timestamp());
+
+            log.info("Body: {}, Key:{}, Headers:{}",
+                messageBody, messageKey, headersToString(message.headers()));
           } finally {
             // 3. Clean up so we don't leak state into a reused Kafka thread
             MDC.clear();
@@ -81,16 +87,36 @@ public class KafkaSender {
       String messageBody, String messageKey, Map<String, String> messageHeaders, String TOPIC) {
     ProducerRecord<String, String> record = new ProducerRecord<String, String>(TOPIC, messageKey, messageBody);
 
-    if (messageHeaders == null || messageHeaders.isEmpty()) {
-      return record;
+    // populate message headers with requested ones
+    if (messageHeaders != null && !messageHeaders.isEmpty()) {
+      for (Map.Entry<String, String> entry : messageHeaders.entrySet()) {
+        record.headers().add(entry.getKey(), entry.getValue().getBytes());
+      }
     }
 
-    for (Map.Entry<String, String> entry : messageHeaders.entrySet()) {
-      record.headers().add(entry.getKey(), entry.getValue().getBytes());
+    // catching traceId from MDC and wire it to message headers
+    String traceId = MDC.get("traceId");
+    if (traceId != null && record.headers().lastHeader("traceId") == null) {
+      record.headers().add("traceId", traceId.getBytes());
     }
 
     return record;
 
+  }
+
+  // custom method to log out bytes[] of headers values in valid log
+  private String headersToString(Iterable<org.apache.kafka.common.header.Header> headers) {
+    StringBuilder sb = new StringBuilder("[");
+    boolean first = true;
+    for (org.apache.kafka.common.header.Header h : headers) {
+      if (!first)
+        sb.append(", ");
+      first = false;
+      sb.append(h.key())
+          .append('=')
+          .append(h.value() == null ? "null" : new String(h.value(), java.nio.charset.StandardCharsets.UTF_8));
+    }
+    return sb.append(']').toString();
   }
 
 }
