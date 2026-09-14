@@ -21,13 +21,14 @@ public class KafkaSender {
   private final KafkaTemplate<String, String> kafkaTemplate;
   private final Executor kafkaExecutor;
 
+  // to send message with async pool to utilize delay before delivery
   public CompletableFuture<Void> sendMessageAsync(String messageBody,
       String messageKey,
       Map<String, String> messageHeaders,
       String TOPIC,
       long delayMillis) {
 
-    // Capture MDC on the caller thread
+    // capture MDC on the caller thread
     Map<String, String> mdcContext = MDC.getCopyOfContextMap();
 
     return CompletableFuture.runAsync(() -> {
@@ -37,14 +38,14 @@ public class KafkaSender {
       }
       try {
         if (delayMillis > 0) {
-          log.warn("Delay for kafka producer: {} ms", delayMillis);
+          log.info("Delay for kafka producer: {} ms", delayMillis);
           Thread.sleep(delayMillis);
         }
         // Call the existing sync-ish method (which itself uses whenComplete)
         sendMessage(messageBody, messageKey, messageHeaders, TOPIC);
       } catch (InterruptedException ie) {
         Thread.currentThread().interrupt();
-        log.warn("Sending is interrupted for topic={}", TOPIC, ie);
+        log.error("Sending is interrupted for topic={}", TOPIC, ie);
       } finally {
         MDC.clear();
       }
