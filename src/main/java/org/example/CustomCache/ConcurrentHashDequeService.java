@@ -20,12 +20,12 @@ public class ConcurrentHashDequeService {
     deque.add(value);
   }
 
-  public String getFromTail() throws Exception {
+  public String getFromTail() {
     String result = deque.pollFirst();
     if (result != null) {
       return result;
     } else {
-      throw new Exception("No elements in deque");
+      return null;
     }
   }
 

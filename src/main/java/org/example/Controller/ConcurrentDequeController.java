@@ -52,12 +52,19 @@ public class ConcurrentDequeController {
 
   @Operation(summary = "Get entry from tail", description = "Delete and return entry from tail of deque")
   @GetMapping(path = "/entry")
-  public CommonMessageDTO get() throws Exception {
-    CommonMessageDTO messageDTO = new CommonMessageDTO();
+  public ResponseEntity<?> get() throws Exception {
 
-    messageDTO.setResult(cache.getFromTail());
+    String result = cache.getFromTail();
+    if (result != null) {
 
-    return messageDTO;
+      CommonMessageDTO messageDTO = new CommonMessageDTO();
+      messageDTO.setResult(result);
+      log.info("Response: {}", messageDTO);
+      return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
+    } else {
+      log.error("Deque is empty");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Deque is empty");
+    }
 
   }
 
