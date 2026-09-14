@@ -1,6 +1,6 @@
 package org.example.Controller;
 
-import org.example.CustomCache.CacheService;
+import org.example.CustomCache.ConcurrentHashMapCacheService;
 import org.example.DTO.CommonMessageDTO;
 import org.example.DTO.PutCacheDTO;
 import org.example.DTO.TotalCacheDTO;
@@ -24,14 +24,19 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Cache group", description = "Group to work with ConcurrentHashMap")
 public class ConcurrentHashMapController {
 
-  private final CacheService cacheService;
+  private final ConcurrentHashMapCacheService cacheService;
 
   @Operation(summary = "Store value", description = "Put string in cache, with return of entry's UUID - to fetch later")
   @PutMapping(path = "/cache")
   public CommonMessageDTO putInCache(@RequestBody PutCacheDTO requestDTO) {
 
     log.info("Mapped requset: {}", requestDTO);
-    return new CommonMessageDTO(cacheService.put(requestDTO.getValue()));
+
+    CommonMessageDTO messageDTO = new CommonMessageDTO();
+
+    messageDTO.setResult(cacheService.put(requestDTO.getValue()));
+
+    return messageDTO;
 
   }
 

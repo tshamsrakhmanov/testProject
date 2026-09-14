@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class CacheService {
+public class ConcurrentHashMapCacheService {
 
   private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 

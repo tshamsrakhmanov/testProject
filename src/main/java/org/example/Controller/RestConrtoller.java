@@ -46,7 +46,7 @@ public class RestConrtoller {
         requestDTO.getMessageHeaders(),
         TOPIC);
 
-    return new CommonMessageDTO("Success!");
+    return new CommonMessageDTO();
 
   }
 
@@ -61,7 +61,7 @@ public class RestConrtoller {
         TOPIC,
         3000L);
 
-    return new CommonMessageDTO("Success!");
+    return new CommonMessageDTO();
 
   }
 
