@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class CachingRequestBodyFilter implements Filter {
+  // Filter class to store body of incoming message
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
       throws IOException, ServletException {

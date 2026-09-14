@@ -22,8 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
 
   // Custom class to modify exception handling in restControllers
-  // P.1 !!!
-  // ...rest of the job happens in filter !!!
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
