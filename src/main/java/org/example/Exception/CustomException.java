@@ -15,7 +15,6 @@ public class CustomException extends RuntimeException {
   @Override
   public String getMessage() {
     return String.format("Storage '%s' exceeded maximum capacity: %d/%d records", storageName, currentSize, maxSize);
-
   }
 
 }
