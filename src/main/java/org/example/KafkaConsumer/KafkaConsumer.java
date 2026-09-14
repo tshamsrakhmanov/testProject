@@ -1,12 +1,8 @@
 package org.example.KafkaConsumer;
 
-import java.nio.charset.StandardCharsets;
-
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -23,43 +19,32 @@ public class KafkaConsumer {
   @Value("custom.kafka_topic_write")
   private String topicOut;
 
-  // @KafkaListener(topics = "${custom.kafka_topic_listen}", groupId =
-  // "stubConsumerGroupIn")
-  // private void topicInListener(
-  // @Payload String messageBody,
-  // @Header(name = KafkaHeaders.RECEIVED_KEY, required = false) String
-  // messageKey,
-  // @Header(name = KafkaHeaders.RECEIVED_TOPIC) String topic,
-  // @Header(name = KafkaHeaders.RECEIVED_PARTITION) int partition,
-  // @Header(name = KafkaHeaders.OFFSET) long offset,
-  // @Header(name = "kafka_receivedHeader_traceId", required = false) byte[]
-  // traceId
-  //
-  // ) {
-  //
-  // log.info("Topic: {} partition: {} offset: {} key: {}", topic, partition,
-  // offset, messageKey);
-  // log.info("Message: {}", messageBody);
-  // log.info("traceId header: {}", traceId != null ? new String(traceId,
-  // StandardCharsets.UTF_8) : null);
-  //
-  // }
-
   @KafkaListener(topics = { "${custom.kafka_topic_write}",
       "${custom.kafka_topic_listen}" }, groupId = "stubConsumerGroupOut")
-  private void topicOutListener(
-
-      @Payload String messageBody,
-      @Header(name = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
-      @Header(name = KafkaHeaders.RECEIVED_TOPIC) String topic,
-      @Header(name = KafkaHeaders.RECEIVED_PARTITION) int partition,
-      @Header(name = KafkaHeaders.OFFSET) long offset
-
-  ) {
-
+  private void topicOutListener(ConsumerRecord<String, String> record) {
+    log.info(" <---");
     log.info("Kafka message RECEIVED");
-    log.info("Topic: {} partition: {} offset: {} key: {}", topic, partition, offset, messageKey);
-    log.info("Message: {}", messageBody);
+    log.info("Topic: {}, partition: {}, offset: {}",
+        record.topic(), record.partition(), record.offset());
+    log.info("Body: {}, Key: {}, Headers: {}", record.value(), record.key(), kafkaHeadersToString(record.headers()));
 
+  }
+
+  private static String kafkaHeadersToString(
+      org.apache.kafka.common.header.Headers headers) {
+    if (headers == null)
+      return "[]";
+    StringBuilder sb = new StringBuilder("[");
+    boolean first = true;
+    for (org.apache.kafka.common.header.Header h : headers) {
+      if (!first)
+        sb.append(", ");
+      first = false;
+      String value = h.value() == null
+          ? "null"
+          : new String(h.value(), java.nio.charset.StandardCharsets.UTF_8);
+      sb.append(h.key()).append('=').append(value);
+    }
+    return sb.append(']').toString();
   }
 }

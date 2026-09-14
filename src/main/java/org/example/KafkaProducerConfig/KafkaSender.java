@@ -70,11 +70,12 @@ public class KafkaSender {
               return;
             }
             RecordMetadata md = result.getRecordMetadata();
+            log.info(" --->");
             log.info("Kafka message SEND");
             log.info("Topic: {}, partition: {}, offset: {}, timestamp: {}",
                 md.topic(), md.partition(), md.offset(), md.timestamp());
 
-            log.info("Body: {}, Key:{}, Headers:{}",
+            log.info("Body: {}, Key: {}, Headers: {}",
                 messageBody, messageKey, headersToString(message.headers()));
           } finally {
             // 3. Clean up so we don't leak state into a reused Kafka thread
