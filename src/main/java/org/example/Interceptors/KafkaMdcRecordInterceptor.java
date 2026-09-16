@@ -17,9 +17,9 @@ public class KafkaMdcRecordInterceptor implements RecordInterceptor<String, Stri
   public ConsumerRecord<String, String> intercept(ConsumerRecord<String, String> record,
       Consumer<String, String> consumer) {
     String traceId = null;
-    Header h = record.headers().lastHeader("traceId");
-    if (h != null && h.value() != null) {
-      traceId = new String(h.value(), StandardCharsets.UTF_8);
+    Header header = record.headers().lastHeader("traceId");
+    if (header != null && header.value() != null) {
+      traceId = new String(header.value(), StandardCharsets.UTF_8);
     }
     if (traceId == null || traceId.isBlank()) {
       traceId = UUID.randomUUID().toString();

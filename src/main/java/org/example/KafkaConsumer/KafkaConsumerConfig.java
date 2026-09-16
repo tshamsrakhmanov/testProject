@@ -43,7 +43,7 @@ public class KafkaConsumerConfig {
     factory.setConsumerFactory(consumerFactory());
     factory.setConcurrency(3);
     factory.getContainerProperties().setPollTimeout(500);
-    factory.setRecordInterceptor(kafkaMdcRecordInterceptor); // <-- register
+    factory.setRecordInterceptor(kafkaMdcRecordInterceptor);
     return factory;
   }
 

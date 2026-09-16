@@ -1,7 +1,6 @@
 package org.example.KafkaConsumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -13,14 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
-  @Value("${custom.kafka_topic_listen}")
-  private String topicIn;
+  // @Value("${custom.kafka_topic_in}")
+  // private String topic_in;
 
-  @Value("custom.kafka_topic_write")
-  private String topicOut;
+  // @Value("custom.kafka_topic_out")
+  // private String topic_out;
 
-  @KafkaListener(topics = { "${custom.kafka_topic_write}",
-      "${custom.kafka_topic_listen}" }, groupId = "stubConsumerGroupOut")
+  @KafkaListener(topics = { "${custom.kafka_topic_in}",
+      "${custom.kafka_topic_out}" }, groupId = "stubConsumerGroupOut")
   private void topicOutListener(ConsumerRecord<String, String> record) {
     log.info(" <---");
     log.info("Kafka message RECEIVED");

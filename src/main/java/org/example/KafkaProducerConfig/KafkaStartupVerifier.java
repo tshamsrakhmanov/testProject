@@ -27,8 +27,8 @@ public class KafkaStartupVerifier {
   @Value("${custom.kafka_brokers}")
   private String bootstrapServers;
 
-  @Value("${custom.kafka_topic_write}")
-  private String topicWrite;
+  // @Value("${custom.kafka_topic_write}")
+  // private String topicWrite;
 
   @EventListener(ApplicationReadyEvent.class)
   public void verifyKafkaConnection() {
