@@ -13,17 +13,72 @@ import java.security.interfaces.ECPublicKey;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.Instant;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.example.DTO.KeysDTO;
+import org.example.DTO.TokenSigningDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TokenizerService {
+
+  @Value("${custom.privateKey}")
+  private String privateKey;
+
+  public String signToken(TokenSigningDTO tokenSigningDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
+
+    Map<String, Object> jwtBody = new HashMap<String, Object>(tokenSigningDTO.getTokenBody());
+
+    if (jwtBody.containsKey("iat") || jwtBody.containsKey("IAT") || jwtBody.containsKey("exp")
+        || jwtBody.containsKey("EXP")) {
+      log.error("iat exp IAT EXP detected, abort");
+      throw new RuntimeException("iat exp IAT EXP detected, not allowed");
+    }
+
+    JwtBuilder jwt = Jwts.builder();
+
+    for (Map.Entry<String, Object> entry : jwtBody.entrySet()) {
+      jwt.claim(entry.getKey(), entry.getValue());
+    }
+
+    Instant now = Instant.now();
+    long iat = now.getEpochSecond();
+    Instant shift = now.plusSeconds(600);
+    long exp = shift.getEpochSecond();
+    jwt.claim("iat", iat);
+    jwt.claim("exp", exp);
+
+    if (tokenSigningDTO.getTokenHeaders() != null) {
+      log.info("Headers detected: {}", tokenSigningDTO.getTokenHeaders());
+      Map<String, Object> jwtHeaders = new HashMap<>(tokenSigningDTO.getTokenHeaders());
+      Map<String, Object> headers = new HashMap<>(jwtHeaders);
+      jwt.setHeader(headers);
+    }
+
+    byte[] privateKeyBytes = Base64.getDecoder().decode(privateKey);
+    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+    PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+
+    String jwtTokenSigned = jwt.signWith(privateKey, SignatureAlgorithm.ES256).compact();
+
+    return jwtTokenSigned;
+
+  }
 
   public KeysDTO generateEs256Keys()
       throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException {

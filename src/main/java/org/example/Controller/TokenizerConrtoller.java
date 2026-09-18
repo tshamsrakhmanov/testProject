@@ -5,8 +5,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 import org.example.DTO.KeysDTO;
+import org.example.DTO.TokenSigningDTO;
 import org.example.Service.TokenizerService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,15 +33,28 @@ public class TokenizerConrtoller {
   private final TokenizerService tokenizerService;
   private final ObjectMapper om;
 
-  @Operation(summary = "Store value", description = "Put string in cache, with return of entry's UUID - to fetch later")
+  @Operation(summary = "Generate keys", description = "Generate 4 keys: public, private, x, y")
   @GetMapping(path = "/keysPack")
-  public KeysDTO putInCache()
+  public KeysDTO generateKeys()
       throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException,
       JsonProcessingException {
 
     KeysDTO keysDTO = tokenizerService.generateEs256Keys();
     log.info("Return: {}", om.writeValueAsString(keysDTO));
     return tokenizerService.generateEs256Keys();
+
+  }
+
+  @Operation(summary = "Sing token", description = "Generate token with sign")
+  @PostMapping(path = "/sign")
+  public ResponseEntity<String> generateTokenWithSign(@RequestBody TokenSigningDTO tokenSigningDTO)
+      throws NoSuchAlgorithmException, InvalidKeySpecException {
+    log.info("Mapped: {}", tokenSigningDTO);
+
+    String res = tokenizerService.signToken(tokenSigningDTO);
+    log.info("Return: {}", res);
+
+    return ResponseEntity.status(HttpStatus.OK).body(res);
 
   }
 }
