@@ -5,7 +5,7 @@ TODO
 [x] kafka producer / consumer
 [x] simple rest controller
 [ ] add example of H2 database
-[ ] add jwt/jwks example
+[x] add jwt/jwks example
 [ ] add inter-apps example (http requests to another app)
 [ ] add configuration via yaml ???
 
