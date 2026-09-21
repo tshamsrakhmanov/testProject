@@ -35,6 +35,8 @@ public class GlobalExceptionHandler {
     } else {
       log.error("Unknown error of body deserialization");
     }
+    log.error("{}", ex.getCause());
+    log.error("{}", ex.getMessage());
     logIncomingMessage(request, "SYNTAX");
 
     return new ErrorResponse("BAD_REQUEST", "Request body deserialization failed: " + ex.getMessage());
@@ -47,16 +49,20 @@ public class GlobalExceptionHandler {
   public ErrorResponse handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
 
     log.error("Request body validation failed");
+    log.error("{}", ex.getCause());
+    log.error("{}", ex.getMessage());
     logIncomingMessage(request, "VALIDATION");
     return new ErrorResponse("BAD_REQUEST", "Validation failed: " + ex.getMessage());
   }
 
   @ExceptionHandler(Exception.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ResponseBody
   public ErrorResponse handleGeneralExceptin(Exception ex, HttpServletRequest request) {
 
     log.error("Unexpected error");
+    log.error("{}", ex.getCause());
+    log.error("{}", ex.getMessage());
     logIncomingMessage(request, "UNEXPECTED");
     return new ErrorResponse("INTERNAL_ERROR", "Unexpected error: " + ex.getMessage());
   }
