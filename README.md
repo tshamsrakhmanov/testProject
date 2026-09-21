@@ -1,13 +1,13 @@
 # TODO
-[x] add example of cache with CacheDeque
-[x] add example of cache with HashMap
-[x] add exception interceptors like in original
+[x] cache with CacheDeque
+[x] cache with HashMap
+[x] exception interceptors like in original
 [x] kafka producer / consumer
 [x] simple rest controller
-[x] add example of H2 database
-[x] add jwt/jwks example
-[ ] add inter-apps example (http requests to another app)
-[ ] add configuration via yaml ???
+[x] H2 database
+[x] jwt/jwks example
+[ ] inter-apps example (http requests to another app)
+[ ] configuration via yaml ???
 
 
 Diffs from original project:
