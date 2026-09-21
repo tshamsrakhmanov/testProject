@@ -19,10 +19,10 @@ public class AutoCleanService {
   public static final String TRACE_ID = "traceId";
   private final DataBaseInterface dataBaseInterface;
 
-  @Value("${app.cleaner.retention-minutes:1}")
+  @Value("${app.cleaner.retention-minutes}")
   private long retentionMinutes;
 
-  @Scheduled(fixedDelayString = "${app.cleaner.interval-ms:60000}")
+  @Scheduled(fixedDelayString = "${app.cleaner.interval-ms}")
   public void cleanOldMessages() {
 
     MDC.put(TRACE_ID, UUID.randomUUID().toString().replace("-", ""));
