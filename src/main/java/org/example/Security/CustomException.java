@@ -1,4 +1,4 @@
-package org.example.Exception;
+package org.example.Security;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

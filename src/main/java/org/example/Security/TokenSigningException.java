@@ -1,4 +1,4 @@
-package org.example.Exception;
+package org.example.Security;
 
 public class TokenSigningException extends RuntimeException {
 

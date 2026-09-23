@@ -23,7 +23,7 @@ import java.util.Set;
 import org.example.Config.ApplicationProperties;
 import org.example.DTO.KeysDTO;
 import org.example.DTO.TokenSigningDTO;
-import org.example.Exception.TokenSigningException;
+import org.example.Security.TokenSigningException;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.JwtBuilder;
