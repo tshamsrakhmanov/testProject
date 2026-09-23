@@ -33,13 +33,13 @@ public class GlobalExceptionHandler {
     } else if (ex.getCause() instanceof InvalidFormatException) {
       log.error("Value deserialization error - wrong format or invalid value");
     } else {
-      log.error("Unknown error of body deserialization");
+      log.error("HttpMessageNotReadableException of body deserialization");
     }
-    log.error("{}", ex.getCause());
-    log.error("{}", ex.getMessage());
-    logIncomingMessage(request, "SYNTAX");
+    logStdOutput(ex);
+    logIncomingMessage(request);
 
-    return new ErrorResponse("BAD_REQUEST", "Request body deserialization failed: " + ex.getMessage());
+    return new ErrorResponse(
+        "HttpMessageNotReadableException ,request body deserialization failed: " + ex.getMessage());
 
   }
 
@@ -48,11 +48,9 @@ public class GlobalExceptionHandler {
   @ResponseBody
   public ErrorResponse handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
 
-    log.error("Request body validation failed");
-    log.error("{}", ex.getCause());
-    log.error("{}", ex.getMessage());
-    logIncomingMessage(request, "VALIDATION");
-    return new ErrorResponse("BAD_REQUEST", "Validation failed: " + ex.getMessage());
+    logStdOutput(ex);
+    logIncomingMessage(request);
+    return new ErrorResponse("MethodArgumentNotValidException, validation failed: " + ex.getMessage());
   }
 
   @ExceptionHandler(Exception.class)
@@ -61,10 +59,9 @@ public class GlobalExceptionHandler {
   public ErrorResponse handleGeneralExceptin(Exception ex, HttpServletRequest request) {
 
     log.error("Unexpected error");
-    log.error("{}", ex.getCause());
-    log.error("{}", ex.getMessage());
-    logIncomingMessage(request, "UNEXPECTED");
-    return new ErrorResponse("INTERNAL_ERROR", "Unexpected error: " + ex.getMessage());
+    logStdOutput(ex);
+    logIncomingMessage(request);
+    return new ErrorResponse("Unexpected error: " + ex.getMessage());
   }
 
   private String getRequestBody(HttpServletRequest request) {
@@ -81,16 +78,20 @@ public class GlobalExceptionHandler {
     }
   }
 
-  private void logIncomingMessage(HttpServletRequest request, String errorType) {
+  private void logIncomingMessage(HttpServletRequest request) {
     try {
       String body = getRequestBody(request);
-      log.error("Detected: [{}] - Path: {}, Body: {}", errorType, request.getRequestURI(), body);
+      log.error("Recovered body: {}", body.replace(" ", "").replace("\n", ""));
     } catch (Exception e) {
       log.error("Could not read request body for logging: {}", e.getMessage());
     }
   }
 
-  record ErrorResponse(String code, String message) {
+  private void logStdOutput(Exception e) {
+    log.error("{}", e.getMessage());
+  }
+
+  record ErrorResponse(String errorMessage) {
   }
 
 }

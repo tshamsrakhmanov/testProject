@@ -40,21 +40,21 @@ public class TokenizerConrtoller {
       JsonProcessingException {
 
     KeysDTO keysDTO = tokenizerService.generateEs256Keys();
-    log.info("Return: {}", om.writeValueAsString(keysDTO));
+    log.info("Return keys: {}", om.writeValueAsString(keysDTO));
     return tokenizerService.generateEs256Keys();
 
   }
 
   @Operation(summary = "Sing token", description = "Generate token with sign")
   @PostMapping(path = "/sign")
-  public ResponseEntity<String> generateTokenWithSign(@RequestBody TokenSigningDTO tokenSigningDTO)
-      throws NoSuchAlgorithmException, InvalidKeySpecException {
+  public ResponseEntity<String> generateTokenWithSign(@RequestBody TokenSigningDTO tokenSigningDTO) {
     log.info("Mapped: {}", tokenSigningDTO);
 
     String res = tokenizerService.signToken(tokenSigningDTO);
-    log.info("Return: {}", res);
+    log.info("Return token: {}", res);
 
-    return ResponseEntity.status(HttpStatus.OK).body(res);
+    return ResponseEntity.status(HttpStatus.OK).body("{\"token\":" + "\"" + res + "\"" + "}");
 
   }
+
 }
