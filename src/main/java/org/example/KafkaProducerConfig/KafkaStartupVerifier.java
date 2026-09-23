@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.springframework.beans.factory.annotation.Value;
+import org.example.Config.ApplicationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -23,20 +23,15 @@ import lombok.extern.slf4j.Slf4j;
 public class KafkaStartupVerifier {
 
   private final ConfigurableApplicationContext context;
-
-  @Value("${custom.kafka_brokers}")
-  private String bootstrapServers;
-
-  // @Value("${custom.kafka_topic_write}")
-  // private String topicWrite;
+  private final ApplicationProperties applicationProperties;
 
   @EventListener(ApplicationReadyEvent.class)
   public void verifyKafkaConnection() {
     String traceId = UUID.randomUUID().toString().replace("-", "");
-    log.info("{} | Checking Kafka connection to: {}", traceId, bootstrapServers);
+    log.info("{} | Checking Kafka connection to: {}", traceId, applicationProperties.kafkaBrokers());
 
     Map<String, Object> config = new HashMap<>();
-    config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, applicationProperties.kafkaBrokers());
     config.put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, 2000);
     config.put(AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 2000);
     config.put(AdminClientConfig.RETRIES_CONFIG, 0);

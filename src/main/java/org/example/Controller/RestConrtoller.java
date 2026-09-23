@@ -1,9 +1,9 @@
 package org.example.Controller;
 
+import org.example.Config.ApplicationProperties;
 import org.example.DTO.CommonMessageDTO;
 import org.example.DTO.RestMessageDTO;
 import org.example.KafkaProducerConfig.KafkaSender;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,10 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class RestConrtoller {
 
-  @Value("${custom.kafka_topic_out}")
-  private String topic_out;
-
   private final KafkaSender kafkaSender;
+  private final ApplicationProperties applicationProperties;
 
   @Tag(name = "Kafka group", description = "Send message to OUT topic with no delay")
   @PostMapping(path = "/kafka_topic_out_no_delay")
@@ -31,7 +29,7 @@ public class RestConrtoller {
         requestDTO.getMessageBody(),
         requestDTO.getMessageKey(),
         requestDTO.getMessageHeaders(),
-        topic_out);
+        applicationProperties.kafkaTopicOut());
 
     return new CommonMessageDTO();
 
@@ -45,7 +43,7 @@ public class RestConrtoller {
         requestDTO.getMessageBody(),
         requestDTO.getMessageKey(),
         requestDTO.getMessageHeaders(),
-        topic_out,
+        applicationProperties.kafkaTopicOut(),
         3000L);
 
     return new CommonMessageDTO();

@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.Config.ApplicationProperties;
 import org.example.Interceptors.KafkaMdcRecordInterceptor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -21,16 +21,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KafkaConsumerConfig {
 
-  @Value("${custom.kafka_brokers}")
-  private String bootstrapServers;
-
-  private final KafkaMdcRecordInterceptor kafkaMdcRecordInterceptor; // <-- inject
+  private final KafkaMdcRecordInterceptor kafkaMdcRecordInterceptor;
+  private final ApplicationProperties applicationProperties;
 
   @Bean
   public ConsumerFactory<String, String> consumerFactory() {
 
     Map<String, Object> configs = new HashMap<>();
-    configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, applicationProperties.kafkaBrokers());
     configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 

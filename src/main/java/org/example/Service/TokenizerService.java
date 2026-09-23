@@ -20,6 +20,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.example.Config.ApplicationProperties;
 import org.example.DTO.KeysDTO;
 import org.example.DTO.TokenSigningDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,8 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TokenizerService {
 
-  @Value("${custom.privateKey}")
-  private String privateKey;
+  private final ApplicationProperties applicationProperties;
 
   public String signToken(TokenSigningDTO tokenSigningDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
@@ -69,7 +69,7 @@ public class TokenizerService {
       jwt.setHeader(headers);
     }
 
-    byte[] privateKeyBytes = Base64.getDecoder().decode(privateKey);
+    byte[] privateKeyBytes = Base64.getDecoder().decode(applicationProperties.privateKey());
     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
     KeyFactory keyFactory = KeyFactory.getInstance("EC");
     PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
