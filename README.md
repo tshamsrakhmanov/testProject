@@ -7,7 +7,7 @@
 [x] H2 database
 [x] jwt/jwks example
 [ ] inter-apps example (http requests to another app)
-[ ] DB example
+[ ] DB connect
 
 # Diffs from original project:
 1. MDC impl - traceId creation/propagation among rest/kafka services

@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-public class RestConrtoller {
+public class KafkaMessagingController {
 
   private final KafkaSender kafkaSender;
   private final ApplicationProperties applicationProperties;
