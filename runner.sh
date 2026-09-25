@@ -14,6 +14,7 @@ APP_PID=$!
 echo "$APP_PID" > "$PIDFILE"
 echo "App started (PID $APP_PID), logging to $LOG"
 
+# a
 # 3. Kill both java and tail on exit (Ctrl+C, kill, script end)
 cleanup() {
     echo
