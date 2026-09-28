@@ -2,6 +2,7 @@
   "orderId": "ORD-2026-000871",
   "customerId": 102938,
   "status": "SHIPPED",
+  "email": "DEFAULT",
   "itemsCount": 3,
   "totalAmount": 149.95,
   "currency": "EUR",

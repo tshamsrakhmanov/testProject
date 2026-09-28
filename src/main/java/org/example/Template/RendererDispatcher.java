@@ -16,24 +16,26 @@ public class RendererDispatcher {
 
   private final Map<String, TemplateRenderer> renderers;
 
-  // init: run through ALL renderers in memory - interface'd classes
+  // INIT: run through ALL renderers in memory - interface'd classes
   // afte - make a list of them: name - renderer itself
   // IMPORTANT !!!
   // renderers must be declared as @Component
   public RendererDispatcher(List<TemplateRenderer> list) {
     Map<String, TemplateRenderer> templateRenderersMap = new HashMap<>();
     // run through all and alert on Duplicates - halts app
-    for (TemplateRenderer r : list) {
-      String name = r.templateName();
-      if (templateRenderersMap.containsKey(name)) {
-        throw new IllegalStateException("Duplicate renderer for: " + name);
+    for (TemplateRenderer foundRenderer : list) {
+      String rendererName = foundRenderer.templateName();
+      if (templateRenderersMap.containsKey(rendererName)) {
+        throw new IllegalStateException("Duplicate renderer for: " + rendererName);
       }
-      templateRenderersMap.put(name, r);
+      templateRenderersMap.put(rendererName, foundRenderer);
     }
     this.renderers = Map.copyOf(templateRenderersMap);
     log.info("Registered {} renderers: {}", renderers.size(), renderers.keySet());
   }
 
+  // public method to use after getting a template and further need of render
+  // take struct of rendererName-JsonNode and applies given renderer to JsonNode
   public JsonNode render(Routed routed) {
     ObjectNode out = routed.payload().deepCopy();
 
@@ -47,6 +49,8 @@ public class RendererDispatcher {
     return out;
   }
 
+  // public method for coverageCheck - in fact just give all Registered names of
+  // renderers
   public Set<String> names() {
     return renderers.keySet();
   }

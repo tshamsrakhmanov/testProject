@@ -8,6 +8,7 @@
       "phone": "+31 10 555 0142"
     }
   },
+  "email": "DEFAULT",
   "lineItems": [
     {
       "sku": "WID-001",

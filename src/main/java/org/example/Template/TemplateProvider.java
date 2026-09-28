@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TemplateProvider {
 
+  public static final String DEFAULT = "default";
+
   private final Map<String, JsonNode> templateContainer;
 
   // fill up cache with JSON files at start up of this bean - autorun-like
@@ -61,6 +63,10 @@ public class TemplateProvider {
 
     }
     return res;
+  }
+
+  public boolean exists(String name) {
+    return templateContainer.containsKey(name);
   }
 
   public Set<String> names() {

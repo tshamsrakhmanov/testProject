@@ -14,7 +14,7 @@ public class DefaultRenderer implements TemplateRenderer {
 
   @Override
   public void render(ObjectNode out) {
-    out.put("name", "Pasha");
+    out.put("email", "pasha@mail.ru");
   }
 
 }
