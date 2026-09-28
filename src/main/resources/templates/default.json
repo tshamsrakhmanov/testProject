@@ -1,0 +1,29 @@
+{
+  "invoiceNumber": "INV-2026-0451",
+  "issuedTo": {
+    "companyName": "Northwind Traders BV",
+    "vatId": "NL8234.5678.B01",
+    "contact": {
+      "email": "billing@northwind.example",
+      "phone": "+31 10 555 0142"
+    }
+  },
+  "lineItems": [
+    {
+      "sku": "WID-001",
+      "qty": 12,
+      "unitPrice": 4.50
+    },
+    {
+      "sku": "GAD-114",
+      "qty": 1,
+      "unitPrice": 89.00
+    }
+  ],
+  "subtotal": 143.00,
+  "taxRate": 0.21,
+  "taxAmount": 30.03,
+  "total": 173.03,
+  "dueDate": "2026-04-15T00:00:00Z",
+  "paid": false
+}
