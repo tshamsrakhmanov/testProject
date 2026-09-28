@@ -3,7 +3,7 @@ package org.example.Controller;
 import java.util.List;
 
 import org.example.DTO.PutCacheDTO;
-import org.example.Provider.TemplateProvider;
+import org.example.Template.TemplateProvider;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,10 +1,11 @@
-package org.example.Provider;
+package org.example.Template;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -27,7 +28,9 @@ public class TemplateProvider {
       @Value("classpath*:/templates/*.json") Resource[] files) throws IOException {
     Map<String, JsonNode> tmp = new HashMap<>();
     for (Resource r : files) {
-      String name = r.getFilename().replace(".", "_");
+      int dotPlace = r.getFilename().indexOf('.');
+      String nameClean = r.getFilename();
+      String name = nameClean.substring(0, dotPlace);
       JsonNode payload = om.readTree(r.getInputStream());
       if (name == null || !name.matches("[a-z0-9_-]+"))
         throw new IllegalStateException("Bad name in " + r.getFilename());
@@ -41,6 +44,7 @@ public class TemplateProvider {
 
   }
 
+  // return cached json
   public JsonNode get(String name) throws Exception {
     log.info("request for template: {}", name);
     JsonNode p = templateContainer.get(name);
@@ -49,6 +53,7 @@ public class TemplateProvider {
     return p;
   }
 
+  // list of all names in cache
   public List<String> getAllTemplates() {
     List<String> res = new ArrayList<>();
     for (String s : templateContainer.keySet()) {
@@ -58,4 +63,7 @@ public class TemplateProvider {
     return res;
   }
 
+  public Set<String> names() {
+    return templateContainer.keySet();
+  }
 }
