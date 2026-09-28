@@ -8,7 +8,7 @@
 7. [x] jwt/jwks example
 8. [ ] inter-apps example (http requests to another app)
 9. [ ] DB connect
-10. [ ] decoration-or-default function
+10. [x] decoration-or-default function (on steroids!)
 11. [ ] session host function
 
 # Diffs from original project:
