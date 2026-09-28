@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ResponseRouter {
 
-  private final BindingRegistry bindings;
-  private final TemplateProvider templates;
+  private final BindingRegistry bindingRegistry;
+  private final TemplateProvider templateProvider;
 
   // the only method
   // based on given ID of request:
@@ -18,7 +18,7 @@ public class ResponseRouter {
   // either way - gives Route - a linkage of templateName/rendererName and
   // JsonNode to render
   public Routed route(long id) throws Exception {
-    String templateName = bindings.activeTemplateFor(id).orElse(TemplateProvider.DEFAULT);
-    return new Routed(templateName, templates.get(templateName));
+    String templateName = bindingRegistry.activeTemplateFor(id).orElse(TemplateProvider.DEFAULT);
+    return new Routed(templateName, templateProvider.get(templateName));
   }
 }
