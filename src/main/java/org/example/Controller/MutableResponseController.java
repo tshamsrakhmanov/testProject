@@ -36,6 +36,7 @@ public class MutableResponseController {
   private final TemplateProvider templateProvider;
   private final BindingRegistry bindingRegistry;
 
+  // TODO: move to configuration
   private static final Duration TTL = Duration.ofSeconds(30);
 
   @Operation(summary = "Business handler", description = "Take out response")
@@ -61,10 +62,10 @@ public class MutableResponseController {
   @PutMapping("/result_setup")
   public ResponseEntity<Void> setup(@RequestBody SetupRequestDTO req) {
     if (!templateProvider.exists(req.getTemplate())) {
-      // TODO remove resp entity and make better handling, maybe throw some Exceptions
+      // TODO: del resp entity and make better
       return ResponseEntity.unprocessableEntity().build();
     }
     bindingRegistry.bind(req.getId(), req.getTemplate(), TTL);
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.ok().build();
   }
 }

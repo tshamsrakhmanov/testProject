@@ -20,8 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TemplateProvider {
 
+  // used only in one place - to get back default template by 'default' name
   public static final String DEFAULT = "default";
 
+  // the storage of tamplateName and tempalteJsonNode itself
   private final Map<String, JsonNode> templateContainer;
 
   // fill up cache with JSON files at start up of this bean - autorun-like
@@ -46,7 +48,7 @@ public class TemplateProvider {
 
   }
 
-  // return cached json
+  // for router - to get templateJsonNode via templateName
   public JsonNode get(String name) throws Exception {
     log.info("request for template: {}", name);
     JsonNode p = templateContainer.get(name);
@@ -55,7 +57,7 @@ public class TemplateProvider {
     return p;
   }
 
-  // list of all names in cache
+  // list of all names in cache - for controller
   public List<String> getAllTemplates() {
     List<String> res = new ArrayList<>();
     for (String s : templateContainer.keySet()) {
@@ -65,10 +67,12 @@ public class TemplateProvider {
     return res;
   }
 
+  // to use in controller to throw error
   public boolean exists(String name) {
     return templateContainer.containsKey(name);
   }
 
+  // for coverageCheck
   public Set<String> names() {
     return templateContainer.keySet();
   }

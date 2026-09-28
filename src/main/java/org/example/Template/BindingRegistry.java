@@ -26,15 +26,27 @@ public class BindingRegistry {
     map.put(id, new Binding(template, Instant.now().plus(ttl)));
   }
 
-  // ????
+  // used only in ResponseRouter
+  // tries to get linkage from cahce (here)
+  // if FOUND:
   public Optional<String> activeTemplateFor(long id) {
-    Binding b = map.get(id);
-    if (b == null)
+    Binding templateBinding = map.get(id);
+    // if not found - return empty (so on upper level it will be converted to
+    // default tempalate request)
+    if (templateBinding == null)
       return Optional.empty();
-    if (!b.alive()) {
-      map.remove(id, b);
+    // if fount but not alive - so timing is over - remove this entry from cache
+    // (self-cleaning operation)
+    // and return empty at the end
+    // WARN: is it even safe to clean-up like this?...
+    // WARN: so cache will buildup with time - NO SAFE !!!
+    if (!templateBinding.alive()) {
+      map.remove(id, templateBinding);
       return Optional.empty();
     }
-    return Optional.of(b.template());
+    // if we pass checks (so there is some binding and it's not rotten by time)
+    // return this binded template
+    return Optional.of(templateBinding.template());
+
   }
 }

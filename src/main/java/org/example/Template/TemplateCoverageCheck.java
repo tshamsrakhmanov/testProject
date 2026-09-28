@@ -8,7 +8,7 @@ import java.util.Set;
 @Component
 public class TemplateCoverageCheck {
 
-  // init: get all beans of templates and renderers
+  // INIT: get all beans of templates and renderers
   // and check if they have 1-to-1 comparison:
   // so for each template there is renderer
   // -> connection goes by names
