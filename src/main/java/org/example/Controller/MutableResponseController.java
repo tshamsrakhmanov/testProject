@@ -10,6 +10,8 @@ import org.example.Template.BindingRegistry;
 import org.example.Template.RendererDispatcher;
 import org.example.Template.ResponseRouter;
 import org.example.Template.TemplateProvider;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,8 +43,14 @@ public class MutableResponseController {
 
   @Operation(summary = "Business handler", description = "Take out response")
   @GetMapping(path = "/result_final")
-  public JsonNode result(@RequestBody IdDTO request) throws Exception {
-    return dispatcher.render(router.route(request.getId()));
+  public ResponseEntity<?> result(@RequestBody JsonNode request) throws Exception {
+    long id = request.get("id").asLong();
+    if (request.has("id")) {
+
+      return ResponseEntity.status(HttpStatus.OK).body(dispatcher.render(router.route(id), request));
+      // return dispatcher.render(router.route(id), request);
+    }
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("no ID provided");
   }
 
   @Operation(summary = "All templates loaded", description = "List of all pre-defined responses")

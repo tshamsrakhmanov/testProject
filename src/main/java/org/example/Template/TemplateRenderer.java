@@ -1,5 +1,6 @@
 package org.example.Template;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface TemplateRenderer {
@@ -8,5 +9,5 @@ public interface TemplateRenderer {
   String templateName();
 
   // in-fact renderer that must be used - defined per renderer
-  void render(ObjectNode out);
+  void render(ObjectNode out, JsonNode request);
 }

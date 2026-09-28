@@ -14,7 +14,7 @@ import java.util.Set;
 @Service
 public class RendererDispatcher {
 
-  private final Map<String, TemplateRenderer> renderers;
+  private final Map<String, TemplateRenderer> renderersCache;
 
   // INIT: run through ALL renderers in memory - interface'd classes
   // afte - make a list of them: name - renderer itself
@@ -30,28 +30,28 @@ public class RendererDispatcher {
       }
       templateRenderersMap.put(rendererName, foundRenderer);
     }
-    this.renderers = Map.copyOf(templateRenderersMap);
-    log.info("Registered {} renderers: {}", renderers.size(), renderers.keySet());
+    this.renderersCache = Map.copyOf(templateRenderersMap);
+    log.info("Registered {} renderers: {}", renderersCache.size(), renderersCache.keySet());
   }
 
   // public method to use after getting a template and further need of render
   // take struct of rendererName-JsonNode and applies given renderer to JsonNode
-  public JsonNode render(Routed routed) {
+  public JsonNode render(Routed routed, JsonNode request) {
     ObjectNode out = routed.payload().deepCopy();
 
-    TemplateRenderer r = renderers.get(routed.templateName());
-    if (r == null) {
+    TemplateRenderer renderer = renderersCache.get(routed.templateName());
+    if (renderer == null) {
       log.warn("No renderer for template '{}' — returning payload unchanged", routed.templateName());
       return out;
     }
 
-    r.render(out);
+    renderer.render(out, request);
     return out;
   }
 
   // public method for coverageCheck - in fact just give all Registered names of
   // renderers
   public Set<String> names() {
-    return renderers.keySet();
+    return renderersCache.keySet();
   }
 }
