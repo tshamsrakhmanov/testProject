@@ -8,7 +8,7 @@ With all classes in Template package - example for mutability of responses.
 ## Chain of calls
 | step | component | action |
 |---|---|---|
-| 1. | RestController | Entry point |
+| 1. | RestController | Entry point (takes @RequestBody as JsonNode) |
 | 2. | HTTP method | Takes JsonNode as input, mandatory id field. Others - can be used as values in template rendering |
 | 3. | ResponseRouter|Takes id as input and prepares combined object <templateName/templateRenderer, templateJsonNode> |
 | 4. | BindingRegistry | Id in cache (binded) ? return corresponding templateName : return default templateName |
