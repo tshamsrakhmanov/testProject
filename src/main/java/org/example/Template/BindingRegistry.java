@@ -56,7 +56,6 @@ public class BindingRegistry {
     // if we pass checks (so there is some binding and it's not rotten by time)
     // return this binded template
     return Optional.of(templateBinding.template());
-
   }
 
   @Scheduled(cron = AnnotationsParametersConfig.CRON_SWIPE_BINDINGS)
