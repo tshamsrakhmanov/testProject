@@ -33,6 +33,8 @@ With all classes in Template package - its example for mutability of responses.
 | 7. | Response HTTP | Return JsonNode as result |
 
 ## Additions:
-TempalteCoverageCheck ->  at startup checks that for each .json there is render class (String name of class must be equal to .json name, made via @component and interface)\
-BindingRegistry ->        auto swipe for outdated bindings (can be modified via app props)\
-BindingRegistry ->        take/remove logic for binding (if for requested ID there was binding and it outdated: binding deleted, returns default template)\
+| step | component | action |
+|---|---|---|
+| 1. TempalteCoverageCheck | at startup checks that for each .json there is render class (String name of class must be equal to .json name, made via @component and interface) |
+| 2. BindingRegistry | auto swipe for outdated bindings (can be modified via app props) |
+| 3. BindingRegistry | take/remove logic for binding (if for requested ID there was binding and it outdated: binding deleted, returns default template) |
