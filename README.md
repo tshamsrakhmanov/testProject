@@ -22,7 +22,7 @@
 With all classes in Template package - its example for mutability of responses.
 
 ## Chain of calls (overview):
-RestController ->     |     Entry point
+RestController ->     |     Entry point\
 HTTP method ->        |     Takes JsonNode as input, mandatory id field. Others - can be used as values in template rendering
 ResponseRouter ->     |     Takes id as input and prepares combined object <templateName/templateRenderer, templateJsonNode>
 BindingRegistry ->    |     Id in cache (binded) ? return corresponding templateName : return default templateName
