@@ -17,7 +17,7 @@
 3. Swagger and simple documentation
 
 
-# Mutable reponses documentation
+# *Mutable reponses documentation*
 
 With all classes in Template package - its example for mutability of responses.
 
