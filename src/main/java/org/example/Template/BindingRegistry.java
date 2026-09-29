@@ -1,14 +1,23 @@
 package org.example.Template;
 
+import org.example.Config.AnnotationsParametersConfig;
+import org.slf4j.MDC;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Slf4j
 public class BindingRegistry {
+
+  public static final String TRACE_ID = "traceId";
 
   // cache to store link of id <-> template <-> TTL
   // id is used as KEY - to be able to have only one id linkage
@@ -38,10 +47,8 @@ public class BindingRegistry {
     if (templateBinding == null)
       return Optional.empty();
     // if fount but not alive - so timing is over - remove this entry from cache
-    // (self-cleaning operation)
+    // (self-cleaning operation - atomized, the leave binding free for next reuse)
     // and return empty at the end
-    // WARN: is it even safe to clean-up like this?...
-    // WARN: so cache will buildup with time - NO SAFE !!!
     if (!templateBinding.alive()) {
       idBindingCache.remove(id, templateBinding);
       return Optional.empty();
@@ -50,5 +57,24 @@ public class BindingRegistry {
     // return this binded template
     return Optional.of(templateBinding.template());
 
+  }
+
+  @Scheduled(cron = AnnotationsParametersConfig.CRON_SWIPE_BINDINGS)
+  public void sweepExpired() {
+    MDC.put(TRACE_ID, UUID.randomUUID().toString().replace("-", ""));
+    try {
+      int before = idBindingCache.size();
+      idBindingCache.entrySet().removeIf(e -> Instant.now().isAfter(e.getValue().expiresAt()));
+      int removed = before - idBindingCache.size();
+      if (removed > 0) {
+        log.info("Swept {} expired bindings, {} remaining", removed, idBindingCache.size());
+      } else {
+        log.info("Nothing to delete");
+      }
+    } catch (Exception e) {
+      log.error("Auto-swipe failed", e);
+    } finally {
+      MDC.remove(TRACE_ID); // ← always clean up, scheduler threads are reused
+    }
   }
 }

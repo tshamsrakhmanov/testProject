@@ -3,7 +3,7 @@ package org.example.Controller;
 import java.time.Duration;
 import java.util.List;
 
-import org.example.DTO.IdDTO;
+import org.example.Config.ApplicationProperties;
 import org.example.DTO.PutCacheDTO;
 import org.example.DTO.SetupRequestDTO;
 import org.example.Template.BindingRegistry;
@@ -11,7 +11,6 @@ import org.example.Template.RendererDispatcher;
 import org.example.Template.ResponseRouter;
 import org.example.Template.TemplateProvider;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,9 +36,7 @@ public class MutableResponseController {
   private final RendererDispatcher dispatcher;
   private final TemplateProvider templateProvider;
   private final BindingRegistry bindingRegistry;
-
-  // TODO: move to configuration
-  private static final Duration TTL = Duration.ofSeconds(30);
+  private final ApplicationProperties applicationProperties;
 
   @Operation(summary = "Business handler", description = "Take out response")
   @GetMapping(path = "/result_final")
@@ -68,12 +65,12 @@ public class MutableResponseController {
   }
 
   @PutMapping("/result_setup")
-  public ResponseEntity<Void> setup(@RequestBody SetupRequestDTO req) {
-    if (!templateProvider.exists(req.getTemplate())) {
-      // TODO: del resp entity and make better
-      return ResponseEntity.unprocessableEntity().build();
+  public ResponseEntity<?> setup(@RequestBody SetupRequestDTO requestDTO) {
+    if (!templateProvider.exists(requestDTO.getTemplate())) {
+      return ResponseEntity.notFound().build();
     }
-    bindingRegistry.bind(req.getId(), req.getTemplate(), TTL);
+    bindingRegistry.bind(requestDTO.getId(), requestDTO.getTemplate(),
+        Duration.ofSeconds(applicationProperties.ttl_seconds_binding()));
     return ResponseEntity.ok().build();
   }
 }

@@ -12,5 +12,6 @@ public record ApplicationProperties(
     List<String> kafkaBrokers,
     long retentionMinutes,
     long deliveryDelay,
+    long ttl_seconds_binding,
     String kafkaTopicListenConsumerGroup) {
 }
