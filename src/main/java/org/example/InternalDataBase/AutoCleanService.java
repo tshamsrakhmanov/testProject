@@ -21,7 +21,7 @@ public class AutoCleanService {
   private final DataBaseInterface dataBaseInterface;
   private final ApplicationProperties applicationProperties;
 
-  @Scheduled(fixedDelayString = AnnotationsParametersConfig.INTERVAL_CLEANUP)
+  @Scheduled(cron = AnnotationsParametersConfig.CRON_H2_CLEAN_UP)
   public void cleanOldMessages() {
 
     MDC.put(TRACE_ID, UUID.randomUUID().toString().replace("-", ""));
