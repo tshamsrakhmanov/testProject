@@ -21,7 +21,7 @@
 
 With all classes in Template package - its example for mutability of responses.
 
-## Chain of calls (overview):
+## Chain of calls
 RestController ->     |     Entry point\
 HTTP method ->        |     Takes JsonNode as input, mandatory id field. Others - can be used as values in template rendering\
 ResponseRouter ->     |     Takes id as input and prepares combined object <templateName/templateRenderer, templateJsonNode>\
@@ -34,3 +34,10 @@ Response HTTP ->      |     Return JsonNode as result\
 TempalteCoverageCheck ->  at startup checks that for each .json there is render class (String name of class must be equal to .json name, made via @component and interface)\
 BindingRegistry ->        auto swipe for outdated bindings (can be modified via app props)\
 BindingRegistry ->        take/remove logic for binding (if for requested ID there was binding and it outdated: binding deleted, returns default template)\
+
+
+
+| | |
+|---|---|
+| RestController | Entry point |
+| Row 2, Cell 1 | Row 2, Cell 2 |
