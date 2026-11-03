@@ -101,6 +101,14 @@
         <configuration>
           <source>21</source>
           <target>21</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.48</version>
+              <!-- Use the latest version -->
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
     </plugins>

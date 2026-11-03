@@ -4,6 +4,7 @@ import org.example.Config.ApplicationProperties;
 import org.example.DTO.CommonMessageDTO;
 import org.example.DTO.RestMessageDTO;
 import org.example.KafkaProducerConfig.KafkaSender;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Profile("kafka")
 public class KafkaMessagingController {
 
   private final KafkaSender kafkaSender;
