@@ -1,5 +1,6 @@
 # Desctiption
 General purpose type of stub with all possible interfaces, which are used in common load test stubs. Can be used as example and free-to-copy guide.
+- java25 ready
 
 # *Mutable reponses documentation*
 
