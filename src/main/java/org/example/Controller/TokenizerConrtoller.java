@@ -48,8 +48,8 @@ public class TokenizerConrtoller {
   @Operation(summary = "Sing token", description = "Generate token with sign")
   @PostMapping(path = "/sign")
   public ResponseEntity<String> generateTokenWithSign(@RequestBody TokenSigningDTO tokenSigningDTO) {
-    log.info("Mapped: {}", tokenSigningDTO);
 
+    log.info("Mapped: {}", tokenSigningDTO);
     String res = tokenizerService.signToken(tokenSigningDTO);
     log.info("Return token: {}", res);
 

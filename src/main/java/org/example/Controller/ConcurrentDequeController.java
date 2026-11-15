@@ -42,8 +42,6 @@ public class ConcurrentDequeController {
   @PutMapping(path = "/entry")
   public ResponseEntity<?> put(@RequestBody DequeSingleInputDTO request) {
 
-    log.info(" >>> Income: {}", request.toString());
-
     cache.insertToHead(request.getEntry());
 
     return ResponseEntity.status(HttpStatus.OK).build();
@@ -59,7 +57,6 @@ public class ConcurrentDequeController {
 
       CommonMessageDTO messageDTO = new CommonMessageDTO();
       messageDTO.setResult(result);
-      log.info("Response: {}", messageDTO);
       return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
     } else {
       log.error("Deque is empty");
