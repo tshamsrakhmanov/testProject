@@ -35,7 +35,9 @@ With all classes in Template package - example for mutability of responses.
 8.  [ ] inter-apps example (http requests to another app)
 9.  [ ] DB connect
 10. [x] decoration-or-default function (on steroids!)
-11. [ ] session host function
+11. [ ] session host function (reddis connect and multi-node push/pull)
+12. [ ] deque cache reworked (multi-queue named operations)
+13. [ ] rework logging to filters back again, del interceptors due to lack of functionality
 
 # Diffs from original project:
 1. MDC impl - traceId creation/propagation among rest/kafka services
