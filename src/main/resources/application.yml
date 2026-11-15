@@ -19,6 +19,9 @@ custom:
   retention_minutes: 1
   cron_h2_clean_up: "*/30 * * * * *"
 
+  requestHost: "localhost"
+  requestPath: "/request"
+
 management:
   endpoints:
     web:

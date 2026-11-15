@@ -13,5 +13,7 @@ public record ApplicationProperties(
     long retentionMinutes,
     long deliveryDelay,
     long ttl_seconds_binding,
+    String requestHost,
+    String requestPath,
     String kafkaTopicListenConsumerGroup) {
 }
