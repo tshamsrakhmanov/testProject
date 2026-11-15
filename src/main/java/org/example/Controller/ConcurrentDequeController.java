@@ -59,8 +59,8 @@ public class ConcurrentDequeController {
       messageDTO.setResult(result);
       return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
     } else {
-      log.error("Deque is empty");
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Deque is empty");
+      log.warn("Deque is empty");
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deque is empty");
     }
 
   }

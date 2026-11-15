@@ -37,10 +37,17 @@ With all classes in Template package - example for mutability of responses.
 10. [x] decoration-or-default function (on steroids!)
 11. [ ] session host function (reddis connect and multi-node push/pull)
 12. [ ] deque cache reworked (multi-queue named operations)
-13. [ ] rework logging to filters back again, del interceptors due to lack of functionality
+13. [x] rework logging to filters back again, del interceptors due to lack of functionality
 
 # Diffs from original project:
 1. MDC impl - traceId creation/propagation among rest/kafka services
 2. Inteceptors instead of aspects
 3. Swagger and simple documentation
 
+# Optional features
+```--spring.profiles.active=kafka```
+apply to use kafka-related controllers and connection
+```
+```
+```
+```
