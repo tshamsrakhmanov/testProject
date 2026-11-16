@@ -4,6 +4,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+
+import org.example.Config.ApplicationProperties;
 import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -15,28 +18,28 @@ import java.util.UUID;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@RequiredArgsConstructor
 public class TraceIdFilter extends OncePerRequestFilter {
 
-  public static final String TRACE_ID = "traceId";
-  public static final String TRACE_ID_HEADER = "X-Trace-Id";
+  private final ApplicationProperties props;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request,
       HttpServletResponse response,
       FilterChain chain) throws ServletException, IOException {
 
-    String traceId = request.getHeader(TRACE_ID_HEADER);
+    String traceId = request.getHeader(props.xTraceIdString());
     if (traceId == null || traceId.isBlank()) {
       traceId = UUID.randomUUID().toString().replace("-", "");
     }
 
-    MDC.put(TRACE_ID, traceId);
-    response.setHeader(TRACE_ID_HEADER, traceId);
+    MDC.put(props.traceIdString(), traceId);
+    response.setHeader(props.xTraceIdString(), traceId);
 
     try {
       chain.doFilter(request, response);
     } finally {
-      MDC.remove(TRACE_ID);
+      MDC.remove(props.traceIdString());
     }
   }
 }

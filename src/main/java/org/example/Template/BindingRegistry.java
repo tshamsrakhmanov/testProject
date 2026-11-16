@@ -1,10 +1,12 @@
 package org.example.Template;
 
 import org.example.Config.AnnotationsParametersConfig;
+import org.example.Config.ApplicationProperties;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
@@ -15,9 +17,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class BindingRegistry {
 
-  public static final String TRACE_ID = "traceId";
+  private final ApplicationProperties props;
 
   // cache to store link of id <-> template <-> TTL
   // id is used as KEY - to be able to have only one id linkage
@@ -60,7 +63,7 @@ public class BindingRegistry {
 
   @Scheduled(cron = AnnotationsParametersConfig.CRON_SWIPE_BINDINGS)
   public void sweepExpired() {
-    MDC.put(TRACE_ID, UUID.randomUUID().toString().replace("-", ""));
+    MDC.put(props.traceIdString(), UUID.randomUUID().toString().replace("-", ""));
     try {
       int before = idBindingCache.size();
       idBindingCache.entrySet().removeIf(e -> Instant.now().isAfter(e.getValue().expiresAt()));
@@ -73,7 +76,7 @@ public class BindingRegistry {
     } catch (Exception e) {
       log.error("Auto-swipe failed", e);
     } finally {
-      MDC.remove(TRACE_ID); // ← always clean up, scheduler threads are reused
+      MDC.remove(props.traceIdString()); // ← always clean up, scheduler threads are reused
     }
   }
 }

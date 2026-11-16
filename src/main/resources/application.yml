@@ -19,8 +19,11 @@ custom:
   retention_minutes: 1
   cron_h2_clean_up: "*/30 * * * * *"
 
-  requestHost: "localhost:8080"
+  requestHost: "http://localhost:8080"
   requestPath: "/uuidApi/uuid"
+
+  traceIdString: "traceId"
+  xTraceIdString: "X-Trace-Id"
 
 management:
   endpoints:

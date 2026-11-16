@@ -15,5 +15,7 @@ public record ApplicationProperties(
     long ttl_seconds_binding,
     String requestHost,
     String requestPath,
+    String traceIdString,
+    String xTraceIdString,
     String kafkaTopicListenConsumerGroup) {
 }

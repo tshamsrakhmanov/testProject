@@ -17,14 +17,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AutoCleanService {
 
-  public static final String TRACE_ID = "traceId";
   private final DataBaseInterface dataBaseInterface;
   private final ApplicationProperties applicationProperties;
 
   @Scheduled(cron = AnnotationsParametersConfig.CRON_H2_CLEAN_UP)
   public void cleanOldMessages() {
 
-    MDC.put(TRACE_ID, UUID.randomUUID().toString().replace("-", ""));
+    MDC.put(applicationProperties.traceIdString(), UUID.randomUUID().toString().replace("-", ""));
     try {
       LocalDateTime threshold = LocalDateTime.now().minusMinutes(applicationProperties.retentionMinutes());
       int deleted = dataBaseInterface.deleteOlderThan(threshold);
@@ -36,7 +35,7 @@ public class AutoCleanService {
     } catch (Exception e) {
       log.error("Auto-cleaner failed", e);
     } finally {
-      MDC.remove(TRACE_ID); // ← always clean up, scheduler threads are reused
+      MDC.remove(applicationProperties.traceIdString()); // ← always clean up, scheduler threads are reused
     }
 
   }
