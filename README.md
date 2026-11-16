@@ -32,7 +32,7 @@ With all classes in Template package - example for mutability of responses.
 5.  [x] simple rest controller
 6.  [x] H2 database
 7.  [x] jwt/jwks example
-8.  [ ] inter-apps example (http requests to another app)
+8.  [x] inter-apps example (http requests to another app)
 9.  [ ] DB connect
 10. [x] decoration-or-default function (on steroids!)
 11. [ ] session host function (reddis connect and multi-node push/pull)
